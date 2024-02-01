@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:13:31
- * @LastEditTime: 2024-02-01 19:51:48
+ * @LastEditTime: 2024-02-01 21:59:23
  * @LastEditors: Lu
  * @Description:
  */
@@ -304,6 +304,91 @@ export const getTestData = (): {
           type: "tag",
           children: [],
           attributes: [],
+        },
+      ],
+    },
+    {
+      name: "标签中含有属性",
+      input: `<div a='a' b="2">a</div>`,
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "a",
+              value: "a",
+            },
+            {
+              key: "b",
+              value: "2",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "多个层级、多个标签中含有属性",
+      input: `<div a='a' b="2">a<p c="dsfsdf sdf"><a href='ddc.com'/></p></div>`,
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+            {
+              tag: "p",
+              value: "",
+              type: "tag",
+              children: [
+                {
+                  tag: "a",
+                  value: "",
+                  type: "tag",
+                  children: [],
+                  attributes: [
+                    {
+                      key: "href",
+                      value: "ddc.com",
+                    },
+                  ],
+                },
+              ],
+              attributes: [
+                {
+                  key: "c",
+                  value: "dsfsdf sdf",
+                },
+              ],
+            },
+          ],
+          attributes: [
+            {
+              key: "a",
+              value: "a",
+            },
+            {
+              key: "b",
+              value: "2",
+            },
+          ],
         },
       ],
     },

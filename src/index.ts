@@ -1,11 +1,11 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 21:59:41
- * @LastEditTime: 2024-02-01 19:50:27
+ * @LastEditTime: 2024-02-01 21:59:13
  * @LastEditors: Lu
  * @Description:
  */
-import { IParseHtmlItem } from "./types";
+import { IParseHtmlAttribute, IParseHtmlItem } from "./types";
 
 const getTagName = (txt: string) => {
   if (txt.indexOf("</") !== 0) return getStartTagName(txt);
@@ -34,11 +34,14 @@ const parse = (list: string[], startIndex: number) => {
   let isRightStart = false;
   let isEndStart = false;
   // const isRightEnd = false;
-  const isSingleClose = false;
   const output: IParseHtmlItem[] = [];
   let obj: IParseHtmlItem = getDefaultItem();
   let i = startIndex;
-  // let isInQuote = false
+  let isInQuote = false;
+  let isNextNewAttribute = false;
+  let attributeTxt = "";
+  let attributeStartQuote = "";
+  let attributeObj: IParseHtmlAttribute = { key: "", value: undefined };
   for (; i < list.length; i++) {
     const v = list[i];
     const nextVal = list[i + 1];
@@ -62,7 +65,6 @@ const parse = (list: string[], startIndex: number) => {
     if (v === "<") {
       closeTxt += v;
       if (isStart) {
-        // handle attributes
         if (nextVal !== "/" && isEndStart && !isRightStart) {
           // handle between value of tag
           const res = parse(list, i);
@@ -70,6 +72,7 @@ const parse = (list: string[], startIndex: number) => {
           console.log("re start", res.index);
           stackTxt = "";
           closeTxt = "";
+          attributeTxt = "";
           isRightStart = true;
           i = res.index;
         }
@@ -86,7 +89,7 @@ const parse = (list: string[], startIndex: number) => {
         // left start
         isStart = true;
       }
-    } else if (v === ">") {
+    } else if (!isInQuote && v === ">") {
       console.log(isRightStart);
       if (isRightStart) {
         // right end
@@ -96,6 +99,7 @@ const parse = (list: string[], startIndex: number) => {
         obj.tag = tag;
         obj = getDefaultItem();
         stackTxt = "";
+        attributeTxt = "";
         isStart = false;
         isRightStart = false;
         isEndStart = false;
@@ -108,6 +112,7 @@ const parse = (list: string[], startIndex: number) => {
         if (list[i - 1] === "/") {
           obj.tag = getTagName(stackTxt);
           stackTxt = "";
+          attributeTxt = "";
           output.push(obj);
           obj = getDefaultItem();
           // because this tag is end, so need to restart
@@ -125,7 +130,42 @@ const parse = (list: string[], startIndex: number) => {
       console.log("re start", res.index);
       stackTxt = "";
       closeTxt = "";
+      attributeTxt = "";
       i = res.index;
+    } else if (isStart && !isEndStart) {
+      // handle attributes
+      if (!isInQuote && v === " ") {
+        if (attributeTxt) {
+          // only have key
+          attributeObj.key = attributeTxt;
+          attributeStartQuote = "";
+          isInQuote = false;
+          obj.attributes.push(attributeObj);
+        }
+        isNextNewAttribute = true;
+        attributeTxt = "";
+        attributeObj = { key: "", value: undefined };
+      } else if (isNextNewAttribute) {
+        if (v === "=") {
+          attributeObj.key = attributeTxt;
+          attributeTxt = "";
+        } else if (v === "'" || v === '"') {
+          isInQuote = true;
+          if (attributeStartQuote) {
+            // attribute end
+            attributeObj.value = attributeTxt;
+            attributeTxt = "";
+            attributeStartQuote = "";
+            obj.attributes.push(attributeObj);
+            isNextNewAttribute = false;
+            isInQuote = false;
+          } else {
+            attributeStartQuote = v;
+          }
+        } else {
+          attributeTxt += v;
+        }
+      }
     }
   }
   return { output, index: i };
