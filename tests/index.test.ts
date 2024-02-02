@@ -1,18 +1,22 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:00:19
- * @LastEditTime: 2024-02-02 09:59:50
+ * @LastEditTime: 2024-02-02 22:29:38
  * @LastEditors: Lu
  * @Description:
  */
-import { parseHtml } from "../src";
-import { getTestData } from "./testData";
+import { parseHtml, Parser } from "../src";
+import { getTestData, getModifyData } from "./testData";
 const testData = getTestData();
+const testData2 = getModifyData();
 const isOnly = testData.reduce((acc, v) => {
   if (acc) return acc;
   return !!v.only;
 }, false);
-const onlyDescribe = !!testData.find((v) => v.only);
+const isOnly2 = testData2.reduce((acc, v) => {
+  if (acc) return acc;
+  return !!v.only;
+}, false);
 
 describe.skip("parseHtml", () => {
   testData
@@ -21,6 +25,20 @@ describe.skip("parseHtml", () => {
     .forEach((v) => {
       test(v.name, () => {
         expect(parseHtml(v.input)).toMatchObject(v.output);
+      });
+    });
+});
+
+describe("push/remove/modify", () => {
+  testData2
+    .filter((v) => !v.skip)
+    .filter((v) => (isOnly ? v.only : true))
+    .forEach((v) => {
+      test(v.name, () => {
+        const $ = new Parser(v.input[0]);
+        const [i, ...residue] = v.input;
+        $[v.fn](...residue);
+        expect($.parseData).toMatchObject(v.output);
       });
     });
 });

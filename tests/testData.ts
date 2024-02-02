@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:13:31
- * @LastEditTime: 2024-02-02 20:08:22
+ * @LastEditTime: 2024-02-02 22:29:07
  * @LastEditors: Lu
  * @Description:
  */
@@ -845,6 +845,150 @@ export const getQueryAllTestData = (): {
             {
               key: "href",
               value: "#",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+};
+
+export const getModifyData = (): {
+  name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  input: any[];
+  only?: boolean;
+  skip?: boolean;
+  fn: string;
+  output: IParseHtmlItem[];
+}[] => {
+  return [
+    {
+      name: "添加节点",
+      fn: "push",
+      input: [
+        `<div class="d">a</div>`,
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [],
+          attributes: [{ key: "a", value: "a" }],
+        },
+      ],
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "class",
+              value: "d",
+            },
+          ],
+        },
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [],
+          attributes: [{ key: "a", value: "a" }],
+        },
+      ],
+    },
+    {
+      name: "删除节点",
+      input: [`<div class="d">a<a class="cc"></a></div>`, ".cc"],
+      fn: "remove",
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "class",
+              value: "d",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "修改节点",
+      input: [
+        `<div class="d">a<a class="cc"></a></div>`,
+        ".cc",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (v: any) => {
+          v.children.push({
+            tag: "",
+            value: "a",
+            type: "text",
+            children: [],
+            attributes: [],
+          });
+          return v;
+        },
+      ],
+      fn: "modify",
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+            {
+              tag: "a",
+              value: "",
+              type: "tag",
+              children: [
+                {
+                  tag: "",
+                  value: "a",
+                  type: "text",
+                  children: [],
+                  attributes: [],
+                },
+              ],
+              attributes: [
+                {
+                  key: "class",
+                  value: "cc",
+                },
+              ],
+            },
+          ],
+          attributes: [
+            {
+              key: "class",
+              value: "d",
             },
           ],
         },

@@ -1,14 +1,14 @@
 /*
  * @Author: Lu
  * @Date: 2024-02-02 09:31:35
- * @LastEditTime: 2024-02-02 11:10:18
+ * @LastEditTime: 2024-02-02 22:22:26
  * @LastEditors: Lu
  * @Description:
  */
 
 import { EQueryType, IParseHtmlItem, IQueryParams } from "./types";
 
-const checkQueryType = (queryTxt: string): IQueryParams => {
+export const checkQueryType = (queryTxt: string): IQueryParams => {
   if (queryTxt.indexOf(".") === 0)
     return {
       type: EQueryType.class,
@@ -39,19 +39,38 @@ const checkIsMatch = (queryParams: IQueryParams, v: IParseHtmlItem) => {
   return isMatch;
 };
 
-const breadthQuery = (
+export const breadthQuery = (
   list: IParseHtmlItem[],
   queryParams: IQueryParams,
+  cb?: (v: IParseHtmlItem, index: number, list: IParseHtmlItem[]) => void,
 ): IParseHtmlItem | undefined => {
   const willQueryList: IParseHtmlItem[] = [];
-  const matchObj = list.find((v) => {
-    if (checkIsMatch(queryParams, v)) return true;
+  const matchObj = list.find((v, i) => {
+    if (checkIsMatch(queryParams, v)) {
+      cb && cb(v, i, list);
+      return true;
+    }
     willQueryList.push(...v.children);
     return false;
   });
   if (matchObj) return matchObj;
   if (!willQueryList.length) return undefined;
-  return breadthQuery(willQueryList, queryParams);
+  return breadthQuery(willQueryList, queryParams, cb);
+};
+
+export const deepQuery = (
+  list: IParseHtmlItem[],
+  queryParams: IQueryParams,
+  cb?: (v: IParseHtmlItem, index: number, list: IParseHtmlItem[]) => void,
+) => {
+  list.find((v, i) => {
+    if (checkIsMatch(queryParams, v)) {
+      cb && cb(v, i, list);
+      return true;
+    }
+    if (v.children) return deepQuery(v.children, queryParams, cb);
+    return false;
+  });
 };
 
 const breadthQueryAll = (
