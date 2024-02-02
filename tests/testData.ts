@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:13:31
- * @LastEditTime: 2024-02-01 21:59:23
+ * @LastEditTime: 2024-02-02 11:19:59
  * @LastEditors: Lu
  * @Description:
  */
@@ -387,6 +387,427 @@ export const getTestData = (): {
             {
               key: "b",
               value: "2",
+            },
+          ],
+        },
+      ],
+    },
+  ];
+};
+
+export const getQueryTestData = (): {
+  name: string;
+  input: string;
+  query: string;
+  only?: boolean;
+  skip?: boolean;
+  output: IParseHtmlItem | undefined;
+  expectFn?: string;
+}[] => {
+  return [
+    {
+      name: "根据 class 属性查询",
+      input: `<div class="ddd">a</div>`,
+      query: ".ddd",
+      output: {
+        tag: "div",
+        value: "",
+        type: "tag",
+        children: [
+          {
+            tag: "",
+            value: "a",
+            type: "text",
+            children: [],
+            attributes: [],
+          },
+        ],
+        attributes: [
+          {
+            key: "class",
+            value: "ddd",
+          },
+        ],
+      },
+    },
+    {
+      name: "深度 class 属性查询",
+      input: `<div class="ddd">
+      <div>dsdf</div>      
+      <div>dsdf
+        <div>dsdf</div>
+        <a class="dc" href="#"></a>
+      </div>
+      <div>dsdf</div>
+</div>`,
+      query: ".dc",
+      output: {
+        tag: "a",
+        value: "",
+        type: "tag",
+        children: [],
+        attributes: [
+          {
+            key: "class",
+            value: "dc",
+          },
+          {
+            key: "href",
+            value: "#",
+          },
+        ],
+      },
+    },
+    {
+      name: "根据 id 属性查询",
+      input: `<div id="ddd">a</div>`,
+      query: "#ddd",
+      output: {
+        tag: "div",
+        value: "",
+        type: "tag",
+        children: [
+          {
+            tag: "",
+            value: "a",
+            type: "text",
+            children: [],
+            attributes: [],
+          },
+        ],
+        attributes: [
+          {
+            key: "id",
+            value: "ddd",
+          },
+        ],
+      },
+    },
+    {
+      name: "根据标签查询",
+      input: `<div id="ddd"><p>dd</p></div>`,
+      query: "p",
+      output: {
+        tag: "p",
+        value: "",
+        type: "tag",
+        children: [
+          {
+            tag: "",
+            value: "dd",
+            type: "text",
+            children: [],
+            attributes: [],
+          },
+        ],
+        attributes: [],
+      },
+    },
+    {
+      name: "查询不到，返回 undefined",
+      input: `<div id="ddd"><p>dd</p></div>`,
+      query: ".p",
+      output: undefined,
+      expectFn: "toBe",
+    },
+    {
+      name: "多个相同的 class，按广度优先，返回最新匹配的",
+      input: `<div class="ddd">
+      <div class="dc2">
+        <div class="dc">dsdf0</div>
+      </div>
+      <div class="dc">dsdf</div>  
+      <div class="dc">dsdf2
+        <div>dsdf</div>
+        <a class="dc" href="#"></a>
+      </div>
+      <div>dsdf</div>
+</div>`,
+      query: ".dc",
+      output: {
+        tag: "div",
+        value: "",
+        type: "tag",
+        children: [
+          {
+            tag: "",
+            value: "dsdf",
+            type: "text",
+            children: [],
+            attributes: [],
+          },
+        ],
+        attributes: [
+          {
+            key: "class",
+            value: "dc",
+          },
+        ],
+      },
+    },
+  ];
+};
+
+export const getQueryAllTestData = (): {
+  name: string;
+  input: string;
+  query: string;
+  only?: boolean;
+  skip?: boolean;
+  output: IParseHtmlItem[];
+  expectFn?: string;
+}[] => {
+  return [
+    {
+      name: "根据 class 属性查询",
+      input: `<div class="ddd">a</div>`,
+      query: ".ddd",
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "class",
+              value: "ddd",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "深度 class 属性查询",
+      input: `<div class="ddd">
+      <div>dsdf</div>      
+      <div>dsdf
+        <div>dsdf</div>
+        <a class="dc" href="#"></a>
+      </div>
+      <div>dsdf</div>
+</div>`,
+      query: ".dc",
+      output: [
+        {
+          tag: "a",
+          value: "",
+          type: "tag",
+          children: [],
+          attributes: [
+            {
+              key: "class",
+              value: "dc",
+            },
+            {
+              key: "href",
+              value: "#",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "根据 id 属性查询",
+      input: `<div id="ddd">a</div>`,
+      query: "#ddd",
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "id",
+              value: "ddd",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "根据标签查询",
+      input: `<div id="ddd"><p>dd</p></div>`,
+      query: "p",
+      output: [
+        {
+          tag: "p",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "dd",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [],
+        },
+      ],
+    },
+    {
+      name: "查询不到，返回 undefined",
+      input: `<div id="ddd"><p>dd</p></div>`,
+      query: ".p",
+      output: [],
+    },
+    {
+      name: "多个相同的 class，按广度优先返回",
+      input: `<div class="ddd">
+          <div class="dc2">
+            <div class="dc">dsdf0</div>
+          </div>
+          <div class="dc">dsdf</div>
+          <div class="dc">dsdf2
+            <div>dsdf</div>
+            <a class="dc" href="#"></a>
+          </div>
+          <div>dsdf</div>
+    </div>`,
+      query: ".dc",
+      output: [
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "dsdf",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "class",
+              value: "dc",
+            },
+          ],
+        },
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: `dsdf2
+            `,
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+            {
+              tag: "div",
+              value: "",
+              type: "tag",
+              children: [
+                {
+                  tag: "",
+                  value: `dsdf`,
+                  type: "text",
+                  children: [],
+                  attributes: [],
+                },
+              ],
+              attributes: [],
+            },
+            {
+              tag: "",
+              value: `
+            `,
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+            {
+              tag: "a",
+              value: ``,
+              type: "tag",
+              children: [],
+              attributes: [
+                {
+                  key: "class",
+                  value: "dc",
+                },
+
+                {
+                  key: "href",
+                  value: "#",
+                },
+              ],
+            },
+            {
+              tag: "",
+              value: `
+          `,
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "class",
+              value: "dc",
+            },
+          ],
+        },
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "dsdf0",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [
+            {
+              key: "class",
+              value: "dc",
+            },
+          ],
+        },
+        {
+          tag: "a",
+          value: ``,
+          type: "tag",
+          children: [],
+          attributes: [
+            {
+              key: "class",
+              value: "dc",
+            },
+
+            {
+              key: "href",
+              value: "#",
             },
           ],
         },

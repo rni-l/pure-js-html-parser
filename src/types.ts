@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:13:05
- * @LastEditTime: 2024-02-01 21:19:29
+ * @LastEditTime: 2024-02-02 10:05:31
  * @LastEditors: Lu
  * @Description:
  */
@@ -16,4 +16,14 @@ export interface IParseHtmlItem {
   type: IParseValueType;
   children: IParseHtmlItem[];
   attributes: IParseHtmlAttribute[];
+}
+
+export enum EQueryType {
+  tag,
+  class,
+  id,
+}
+export interface IQueryParams {
+  type: EQueryType;
+  queryTxt: string;
 }

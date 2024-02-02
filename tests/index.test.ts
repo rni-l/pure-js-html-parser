@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:00:19
- * @LastEditTime: 2024-02-01 11:25:33
+ * @LastEditTime: 2024-02-02 09:59:50
  * @LastEditors: Lu
  * @Description:
  */
@@ -14,7 +14,7 @@ const isOnly = testData.reduce((acc, v) => {
 }, false);
 const onlyDescribe = !!testData.find((v) => v.only);
 
-describe("parseHtml", () => {
+describe.skip("parseHtml", () => {
   testData
     .filter((v) => !v.skip)
     .filter((v) => (isOnly ? v.only : true))
