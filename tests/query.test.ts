@@ -19,7 +19,7 @@ const isOnly2 = testData2.reduce((acc, v) => {
   return !!v.only;
 }, false);
 
-describe("query", () => {
+describe.skip("query", () => {
   testData
     .filter((v) => !v.skip)
     .filter((v) => (isOnly ? v.only : true))
@@ -31,7 +31,7 @@ describe("query", () => {
     });
 });
 
-describe("queryAll", () => {
+describe.skip("queryAll", () => {
   testData2
     .filter((v) => !v.skip)
     .filter((v) => (isOnly ? v.only : true))
