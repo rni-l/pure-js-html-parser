@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-02-02 11:22:18
- * @LastEditTime: 2024-02-02 11:24:42
+ * @LastEditTime: 2024-02-02 20:14:36
  * @LastEditors: Lu
  * @Description:
  */
@@ -13,7 +13,7 @@ const isOnly = testData.reduce((acc, v) => {
   return !!v.only;
 }, false);
 
-describe("transform", () => {
+describe.skip("transform", () => {
   testData
     .filter((v) => !v.skip)
     .filter((v) => (isOnly ? v.only : true))

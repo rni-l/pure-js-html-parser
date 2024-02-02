@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:13:31
- * @LastEditTime: 2024-02-02 11:19:59
+ * @LastEditTime: 2024-02-02 20:08:22
  * @LastEditors: Lu
  * @Description:
  */
@@ -389,6 +389,43 @@ export const getTestData = (): {
               value: "2",
             },
           ],
+        },
+      ],
+    },
+    {
+      name: "处理 svg 的标签",
+      input: `<?xml version="1.0" encoding="UTF-8"?><div>a</div>`,
+      output: [
+        {
+          tag: "xml",
+          value: "",
+          type: "tag",
+          children: [],
+          attributes: [
+            {
+              key: "version",
+              value: "1.0",
+            },
+            {
+              key: "encoding",
+              value: "UTF-8",
+            },
+          ],
+        },
+        {
+          tag: "div",
+          value: "",
+          type: "tag",
+          children: [
+            {
+              tag: "",
+              value: "a",
+              type: "text",
+              children: [],
+              attributes: [],
+            },
+          ],
+          attributes: [],
         },
       ],
     },

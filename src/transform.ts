@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-02-02 11:21:12
- * @LastEditTime: 2024-02-02 11:34:05
+ * @LastEditTime: 2024-02-02 20:16:05
  * @LastEditors: Lu
  * @Description:
  */
@@ -28,7 +28,11 @@ export const transform = (list: IParseHtmlItem[]): string => {
     if (v.type === "tag") {
       let attributeTxt = transformAttributes(v.attributes);
       attributeTxt = attributeTxt ? ` ${attributeTxt}` : "";
-      txt = `<${v.tag}${attributeTxt}>${transform(v.children)}</${v.tag}>`;
+      if (v.tag === "xml") {
+        txt = `<?xml${attributeTxt}${transform(v.children)}?>`;
+      } else {
+        txt = `<${v.tag}${attributeTxt}>${transform(v.children)}</${v.tag}>`;
+      }
       acc += txt;
     } else if (v.type === "text") {
       acc += v.value;

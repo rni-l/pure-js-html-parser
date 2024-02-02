@@ -1,18 +1,21 @@
 /*
  * @Author: Lu
  * @Date: 2024-02-02 09:29:36
- * @LastEditTime: 2024-02-02 09:29:46
+ * @LastEditTime: 2024-02-02 20:16:39
  * @LastEditors: Lu
  * @Description:
  */
 import { IParseHtmlAttribute, IParseHtmlItem } from "./types";
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const log = (...args: any[]) => {
+  // console.log(...args);
+};
 const getTagName = (txt: string) => {
   if (txt.indexOf("</") !== 0) return getStartTagName(txt);
   return txt.replace(/[<>/]/g, "").trim();
 };
 const getStartTagName = (txt: string) => {
-  console.log("txt", txt);
+  log("txt", txt);
   const match = txt.match(/<\s*([a-zA-Z]+)\s*[^>]*>/);
   if (match && match[1]) return match[1];
   throw new Error("get tag error");
@@ -27,7 +30,6 @@ const getDefaultItem = (): IParseHtmlItem => ({
 });
 
 export const parse = (list: string[], startIndex: number) => {
-  const stack = [];
   let stackTxt = "";
   let closeTxt = "";
   let isStart = false;
@@ -42,20 +44,23 @@ export const parse = (list: string[], startIndex: number) => {
   let attributeTxt = "";
   let attributeStartQuote = "";
   let attributeObj: IParseHtmlAttribute = { key: "", value: undefined };
+  let isSvg = false;
+  let isHandledSvg = false;
   for (; i < list.length; i++) {
     const v = list[i];
     const nextVal = list[i + 1];
+    const prevVal = list[i - 1];
     stackTxt += v;
     if (closeTxt) closeTxt += v;
     if (closeTxt === "</") {
       closeTxt = "";
       // right start
       if (isEndStart) {
-        console.log("right start");
+        log("right start");
         isRightStart = true;
       } else {
         // end this cb
-        console.log("end cb", i);
+        log("end cb", i);
         return {
           output,
           index: i - 2,
@@ -64,12 +69,15 @@ export const parse = (list: string[], startIndex: number) => {
     }
     if (v === "<") {
       closeTxt += v;
+      if (!isHandledSvg && nextVal === "?") {
+        isSvg = true;
+      }
       if (isStart) {
         if (nextVal !== "/" && isEndStart && !isRightStart) {
           // handle between value of tag
           const res = parse(list, i);
           obj.children = res.output;
-          console.log("re start", res.index);
+          log("re start", res.index);
           stackTxt = "";
           closeTxt = "";
           attributeTxt = "";
@@ -90,12 +98,12 @@ export const parse = (list: string[], startIndex: number) => {
         isStart = true;
       }
     } else if (!isInQuote && v === ">") {
-      console.log(isRightStart);
+      log(isRightStart);
       if (isRightStart) {
         // right end
-        console.log("stackTxt", stackTxt);
+        log("stackTxt", stackTxt);
         const tag = getTagName(stackTxt);
-        console.log("tag", tag, stackTxt);
+        log("tag", tag, stackTxt);
         obj.tag = tag;
         obj = getDefaultItem();
         stackTxt = "";
@@ -105,7 +113,21 @@ export const parse = (list: string[], startIndex: number) => {
         isEndStart = false;
       } else if (isStart) {
         // left end
-        console.log("left end");
+        // handle svg xml tag
+        if (isSvg && !isHandledSvg && prevVal === "?") {
+          obj.tag = "xml";
+          stackTxt = "";
+          attributeTxt = "";
+          output.push(obj);
+          obj = getDefaultItem();
+          isSvg = false;
+          isHandledSvg = true;
+          isStart = false;
+          isRightStart = false;
+          isEndStart = false;
+          continue;
+        }
+        log("left end");
         closeTxt = "";
         isEndStart = true;
         // if prev value equal '/', it is single close tag
@@ -127,7 +149,7 @@ export const parse = (list: string[], startIndex: number) => {
       // handle between value of tag
       const res = parse(list, i);
       obj.children = res.output;
-      console.log("re start", res.index);
+      log("re start", res.index);
       stackTxt = "";
       closeTxt = "";
       attributeTxt = "";
