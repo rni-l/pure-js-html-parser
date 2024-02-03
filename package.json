@@ -1,7 +1,8 @@
 {
   "name": "pure-js-html-parser",
   "version": "1.0.0",
-  "description": "",
+  "description": "Implement an HTML parser in pure JS(TS) without relying on any libraries.",
+  "keywords": ["pure-js", "html-parser"],
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -13,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/rni-l/pure-js-html-parser.git"
   },
-  "author": "",
+  "author": "rni-l",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/rni-l/pure-js-html-parser/issues"

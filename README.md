@@ -2,7 +2,7 @@
 
 > Implement an HTML parser in pure JS(TS) without relying on any libraries. Supports basic functionalities such as querying, adding, modifying, removing elements and converting to code.
 
-[中文文档]('./README-zh.md')
+[中文文档](./README-zh.md)
 
 ## Quickly use
 
