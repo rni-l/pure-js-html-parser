@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-02-02 09:29:36
- * @LastEditTime: 2024-02-02 20:16:39
+ * @LastEditTime: 2024-02-03 10:09:05
  * @LastEditors: Lu
  * @Description:
  */
@@ -107,6 +107,7 @@ export const parse = (list: string[], startIndex: number) => {
         obj.tag = tag;
         obj = getDefaultItem();
         stackTxt = "";
+        closeTxt = "";
         attributeTxt = "";
         isStart = false;
         isRightStart = false;
@@ -117,6 +118,7 @@ export const parse = (list: string[], startIndex: number) => {
         if (isSvg && !isHandledSvg && prevVal === "?") {
           obj.tag = "xml";
           stackTxt = "";
+          closeTxt = "";
           attributeTxt = "";
           output.push(obj);
           obj = getDefaultItem();
@@ -134,6 +136,7 @@ export const parse = (list: string[], startIndex: number) => {
         if (list[i - 1] === "/") {
           obj.tag = getTagName(stackTxt);
           stackTxt = "";
+          closeTxt = "";
           attributeTxt = "";
           output.push(obj);
           obj = getDefaultItem();
@@ -168,7 +171,7 @@ export const parse = (list: string[], startIndex: number) => {
         attributeTxt = "";
         attributeObj = { key: "", value: undefined };
       } else if (isNextNewAttribute) {
-        if (v === "=") {
+        if (!attributeStartQuote && v === "=") {
           attributeObj.key = attributeTxt;
           attributeTxt = "";
         } else if (v === "'" || v === '"') {

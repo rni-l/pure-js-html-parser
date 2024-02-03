@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:13:31
- * @LastEditTime: 2024-02-02 22:29:07
+ * @LastEditTime: 2024-02-02 23:43:31
  * @LastEditors: Lu
  * @Description:
  */
@@ -426,6 +426,62 @@ export const getTestData = (): {
             },
           ],
           attributes: [],
+        },
+      ],
+    },
+    {
+      name: "处理 base64 属性的",
+      input: `<?xml version="1.0" encoding="UTF-8"?><image id="ddd" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5MAAAHlCAYAAABoC6h8AAAACXBIWXMAAAsSAAALEgHS3X78AAAg"/><image id="ddd" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5MAAAHlCAYAAABoC6h8AAAACXBIWXMAAAsSAAALEgHS3X78AAAg"/>`,
+      output: [
+        {
+          tag: "xml",
+          value: "",
+          type: "tag",
+          children: [],
+          attributes: [
+            {
+              key: "version",
+              value: "1.0",
+            },
+            {
+              key: "encoding",
+              value: "UTF-8",
+            },
+          ],
+        },
+        {
+          tag: "image",
+          value: "",
+          type: "tag",
+          children: [],
+          attributes: [
+            {
+              key: "id",
+              value: "ddd",
+            },
+            {
+              key: "xlink:href",
+              value:
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5MAAAHlCAYAAABoC6h8AAAACXBIWXMAAAsSAAALEgHS3X78AAAg",
+            },
+          ],
+        },
+        {
+          tag: "image",
+          value: "",
+          type: "tag",
+          children: [],
+          attributes: [
+            {
+              key: "id",
+              value: "ddd",
+            },
+            {
+              key: "xlink:href",
+              value:
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA5MAAAHlCAYAAABoC6h8AAAACXBIWXMAAAsSAAALEgHS3X78AAAg",
+            },
+          ],
         },
       ],
     },

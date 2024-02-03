@@ -1,7 +1,7 @@
 /*
  * @Author: Lu
  * @Date: 2024-02-02 09:31:35
- * @LastEditTime: 2024-02-02 22:22:26
+ * @LastEditTime: 2024-02-03 00:10:44
  * @LastEditors: Lu
  * @Description:
  */
@@ -96,7 +96,6 @@ export const query = (
   queryTxt: string,
 ): IParseHtmlItem | undefined => {
   const res = checkQueryType(queryTxt);
-  console.log(res);
   return breadthQuery(list, res);
 };
 
@@ -105,6 +104,5 @@ export const queryAll = (
   queryTxt: string,
 ): IParseHtmlItem[] => {
   const res = checkQueryType(queryTxt);
-  console.log(res);
   return breadthQueryAll(list, res);
 };

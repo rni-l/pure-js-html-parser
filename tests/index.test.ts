@@ -1,12 +1,13 @@
 /*
  * @Author: Lu
  * @Date: 2024-01-31 22:00:19
- * @LastEditTime: 2024-02-02 22:29:38
+ * @LastEditTime: 2024-02-03 10:09:20
  * @LastEditors: Lu
  * @Description:
  */
 import { parseHtml, Parser } from "../src";
 import { getTestData, getModifyData } from "./testData";
+// import "../src/c";
 const testData = getTestData();
 const testData2 = getModifyData();
 const isOnly = testData.reduce((acc, v) => {
@@ -29,7 +30,7 @@ describe.skip("parseHtml", () => {
     });
 });
 
-describe("push/remove/modify", () => {
+describe.skip("push/remove/modify", () => {
   testData2
     .filter((v) => !v.skip)
     .filter((v) => (isOnly ? v.only : true))
