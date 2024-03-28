@@ -1,13 +1,20 @@
 {
   "name": "pure-js-html-parser",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Implement an HTML parser in pure JS(TS) without relying on any libraries.",
   "keywords": [
     "pure-js",
     "html-parser"
   ],
-  "main": "./lib/index.js",
+  "main": "./lib/index.es.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.es.js",
+      "require": "./lib/index.js"
+    }
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint src/**",
