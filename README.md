@@ -160,3 +160,10 @@ const txt = `<div class="a" id="a" a='a' b="2"><div class="b"></div></div>`
 const $ = new Parser(txt)
 $.transform()
 ```
+
+
+## TODO
+
+* 重构整个功能实现
+* 处理 svg 的标签
+* 处理注释
